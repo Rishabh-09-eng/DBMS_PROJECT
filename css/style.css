@@ -5,58 +5,115 @@ body {
     align-items: center;
     min-height: 100vh;
     margin: 0;
+    font-family: Arial, sans-serif;
+    color: #333;
 }
 
-.auth-page{
+.auth-page {
     justify-content: center;
+    padding: 30px 15px;
+    box-sizing: border-box;
 }
 
 .container {
     background: white;
     padding: 30px;
-    width: 350px;
-    border-radius: 10px;
+    width: 380px;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    box-sizing: border-box;
 }
 
-h2 {
+.table-container {
+    background: white;
+    padding: 25px;
+    width: 90%;
+    max-width: 950px;
+    margin: 25px auto;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    box-sizing: border-box;
+}
+
+h2, h3 {
     text-align: center;
+    margin-top: 0;
+    margin-bottom: 20px;
+    color: #111;
 }
 
 label {
     display: block;
     margin-top: 15px;
+    font-size: 14px;
+    font-weight: bold;
 }
 
-input {
+input, select, textarea {
     width: 100%;
-    padding: 10px;
+    padding: 9px 10px;
     margin-top: 5px;
     box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+}
+
+/* Remove number input increase/decrease buttons (steppers) */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+
+textarea {
+    resize: vertical;
 }
 
 button {
     width: 100%;
-    padding: 12px;
+    padding: 11px;
     margin-top: 20px;
     background: #2563eb;
     color: white;
     border: none;
     cursor: pointer;
-    border-radius: 5px;
+    border-radius: 4px;
+    font-size: 15px;
+    font-weight: bold;
 }
 
 button:hover {
     background: #1d4ed8;
 }
 
+a {
+    color: #2563eb;
+    text-decoration: none;
+}
 
+a:hover {
+    text-decoration: underline;
+}
+
+p {
+    text-align: center;
+    margin-top: 15px;
+    font-size: 14px;
+}
+
+/* Navbar */
 .navbar {
     width: 100%;
     box-sizing: border-box;
-    padding: 15px 50px;
+    padding: 15px 40px;
     background: #1e293b;
     color: white;
-
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -64,53 +121,85 @@ button:hover {
 
 .navbar h2 {
     margin: 0;
+    color: white;
 }
 
 .nav-links {
     display: flex;
     align-items: center;
-    gap: 25px;
+    gap: 20px;
 }
 
 .nav-links a {
     color: white;
     text-decoration: none;
+    font-size: 14px;
 }
 
 .nav-links a:hover {
-    color: #60a5fa;
+    color: #93c5fd;
 }
 
 /* Hero section */
-
 .hero {
     text-align: center;
-    padding: 120px 20px;
-    background: #f1f5f9;
+    padding: 80px 20px;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .hero h1 {
-    font-size: 48px;
+    font-size: 38px;
     color: #1e293b;
+    margin-top: 0;
 }
 
 .hero p {
-    font-size: 18px;
-    color: #64748b;
+    font-size: 16px;
+    color: #555;
     max-width: 600px;
-    margin: 20px auto 30px;
+    margin: 15px auto 25px;
     line-height: 1.6;
 }
 
 .hero-btn {
     display: inline-block;
-    padding: 12px 25px;
+    padding: 10px 22px;
     background: #2563eb;
     color: white;
     text-decoration: none;
-    border-radius: 5px;
+    border-radius: 4px;
+    margin: 5px;
+    font-size: 14px;
 }
 
 .hero-btn:hover {
     background: #1d4ed8;
+    text-decoration: none;
+}
+
+/* Simple table */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+table, th, td {
+    border: 1px solid #ddd;
+}
+
+th, td {
+    padding: 10px;
+    text-align: left;
+    font-size: 14px;
+}
+
+th {
+    background-color: #f1f5f9;
+    color: #333;
+}
+
+tr:nth-child(even) {
+    background-color: #fafafa;
 }

@@ -32,12 +32,12 @@ if (isset($_POST['login'])) {
 
         }
         else {
-            echo "<script>alert('Incorrect password!');</script>";
+            $error = "Incorrect password!";
         }
 
     }
     else {
-        echo "<script>alert('User does not exist!');</script>";
+        $error = "User does not exist!";
     }
 
     mysqli_stmt_close($stmt);
@@ -55,6 +55,10 @@ if (isset($_POST['login'])) {
     <div class="container">
 
         <h2>Login</h2>
+
+        <?php if (!empty($error)) { ?>
+            <p style="color: red; text-align: center;"><?php echo htmlspecialchars($error); ?></p>
+        <?php } ?>
 
         <form action="login.php" method="POST">
 

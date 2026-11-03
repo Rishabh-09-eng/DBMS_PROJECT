@@ -11,7 +11,7 @@
     $confirm_password = $_POST['confirm_password'];
 
     if ($password != $confirm_password) {
-        echo "<script>alert(\"Password doesn't match!\");</script>";
+        $error = "Passwords do not match!";
     }
     else {
 
@@ -57,6 +57,10 @@
 <body class="auth-page">
     <div class="container">
         <h2>Create Account</h2>
+
+        <?php if (!empty($error)) { ?>
+            <p style="color: red; text-align: center;"><?php echo htmlspecialchars($error); ?></p>
+        <?php } ?>
 
         <form action="register.php" method="POST">
 

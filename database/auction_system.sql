@@ -43,6 +43,24 @@ CREATE TABLE `users` (
 INSERT INTO `users` (`user_id`, `name`, `email`, `phone`, `password`, `created_at`) VALUES
 (4, 'Rishabh', 'rishabhkachhot1409@gmail.com', '9887284560', '$2y$10$TDdHD7Tm7u56.s/PL2wd4ufcOI0URqg80.uPS4PiKo9MsMeF36Y2K', '2026-11-03 06:14:25');
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `products`
+--
+
+CREATE TABLE `products` (
+  `product_id` int(11) NOT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  `title` varchar(255) NOT NULL,
+  `category` varchar(100) NOT NULL,
+  `price` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `description` text NOT NULL,
+  `image` varchar(500) DEFAULT NULL,
+  `status` varchar(50) NOT NULL DEFAULT 'Active',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
 --
 -- Indexes for dumped tables
 --
@@ -55,6 +73,13 @@ ALTER TABLE `users`
   ADD UNIQUE KEY `email` (`email`);
 
 --
+-- Indexes for table `products`
+--
+ALTER TABLE `products`
+  ADD PRIMARY KEY (`product_id`),
+  ADD KEY `user_id` (`user_id`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -63,6 +88,23 @@ ALTER TABLE `users`
 --
 ALTER TABLE `users`
   MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `products`
+--
+ALTER TABLE `products`
+  MODIFY `product_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `products`
+--
+ALTER TABLE `products`
+  ADD CONSTRAINT `fk_products_users` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
