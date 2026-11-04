@@ -1,5 +1,8 @@
 <?php
+session_start();
 include 'includes/db.php';
+
+$loggedIn = isset($_SESSION['user_id']);
 
 if (isset($_POST['add_product'])) {
     $title = mysqli_real_escape_string($conn, $_POST['title']);
@@ -7,9 +10,10 @@ if (isset($_POST['add_product'])) {
     $price = mysqli_real_escape_string($conn, $_POST['price']);
     $description = mysqli_real_escape_string($conn, $_POST['description']);
     $image = mysqli_real_escape_string($conn, $_POST['image']);
+    $user_id = $loggedIn ? intval($_SESSION['user_id']) : "NULL";
 
-    $sql = "INSERT INTO products (title, category, price, description, image) 
-            VALUES ('$title', '$category', '$price', '$description', '$image')";
+    $sql = "INSERT INTO products (user_id, title, category, price, description, image) 
+            VALUES ($user_id, '$title', '$category', '$price', '$description', '$image')";
 
     $result = mysqli_query($conn, $sql);
 
@@ -78,7 +82,7 @@ if (isset($_POST['add_product'])) {
 
         </form>
 
-        <p><a href="manage_products.php">Back to Manage Products</a></p>
+        <p><a href="manage_products.php">Back to Manage Products</a> | <a href="auctions.php">View Auctions</a></p>
 
     </div>
 

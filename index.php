@@ -2,6 +2,7 @@
 session_start();
 
 $loggedIn = isset($_SESSION['user_id']);
+$auctionLink = $loggedIn ? "auctions.php" : "login.php";
 ?>
 
 <!DOCTYPE html>
@@ -18,8 +19,7 @@ $loggedIn = isset($_SESSION['user_id']);
 
         <div class="nav-links">
             <a href="index.php">Home</a>
-            <a href="#">Browse Auctions</a>
-            
+            <a href="<?php echo $auctionLink; ?>">Browse Auctions</a>
 
             <?php if ($loggedIn) { ?>
                 <a href="manage_products.php">Products</a>
@@ -47,7 +47,7 @@ $loggedIn = isset($_SESSION['user_id']);
             and win exciting deals.
         </p>
 
-        <a href="#" class="hero-btn">Explore Auctions</a>
+        <a href="<?php echo $auctionLink; ?>" class="hero-btn">Explore Auctions</a>
 
     </section>
 
