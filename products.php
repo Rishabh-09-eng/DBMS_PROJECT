@@ -4,7 +4,6 @@ include 'includes/db.php';
 
 $loggedIn = isset($_SESSION['user_id']);
 
-// Add Product
 if (isset($_POST['add_product'])) {
     $title = $_POST['title'];
     $category = $_POST['category'];
@@ -27,7 +26,6 @@ if (isset($_POST['add_product'])) {
     exit();
 }
 
-// Update Product
 if (isset($_POST['update_product'])) {
     $id = intval($_POST['product_id']);
     $title = $_POST['title'];
@@ -50,7 +48,6 @@ if (isset($_POST['update_product'])) {
     exit();
 }
 
-// Delete Product
 if (isset($_GET['delete'])) {
     $id = intval($_GET['delete']);
 
@@ -61,7 +58,6 @@ if (isset($_GET['delete'])) {
     exit();
 }
 
-// Fetch single product for editing
 $edit_product = null;
 
 if (isset($_GET['edit'])) {
