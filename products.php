@@ -1,5 +1,8 @@
 <?php
+session_start();
 include 'includes/db.php';
+
+$loggedIn = isset($_SESSION['user_id']);
 
 // Add Product
 if (isset($_POST['add_product'])) {
@@ -8,9 +11,10 @@ if (isset($_POST['add_product'])) {
     $price = mysqli_real_escape_string($conn, $_POST['price']);
     $description = mysqli_real_escape_string($conn, $_POST['description']);
     $image = mysqli_real_escape_string($conn, $_POST['image']);
+    $user_id = $loggedIn ? intval($_SESSION['user_id']) : "NULL";
 
-    $sql = "INSERT INTO products (title, category, price, description, image) 
-            VALUES ('$title', '$category', '$price', '$description', '$image')";
+    $sql = "INSERT INTO products (user_id, title, category, price, description, image) 
+            VALUES ($user_id, '$title', '$category', '$price', '$description', '$image')";
     mysqli_query($conn, $sql);
 
     header("Location: manage_products.php");
@@ -69,9 +73,15 @@ if (isset($_GET['edit'])) {
         <h2>BidZone</h2>
         <div class="nav-links">
             <a href="index.php">Home</a>
-            <a href="products.php">Products</a>
-            <a href="login.php">Login</a>
-            <a href="register.php">Register</a>
+            <a href="auctions.php">Auctions</a>
+            <?php if ($loggedIn) { ?>
+                <a href="manage_products.php">Products</a>
+                <span>Welcome, <?php echo htmlspecialchars($_SESSION['user_name']); ?></span>
+                <a href="logout.php">Logout</a>
+            <?php } else { ?>
+                <a href="login.php">Login</a>
+                <a href="register.php">Register</a>
+            <?php } ?>
         </div>
     </nav>
 
@@ -118,7 +128,7 @@ if (isset($_GET['edit'])) {
 
         </form>
 
-        <p><a href="manage_products.php">View Product Listings</a></p>
+        <p><a href="manage_products.php">View Product Listings</a> | <a href="auctions.php">Browse Live Auctions</a></p>
     </div>
 
 </body>

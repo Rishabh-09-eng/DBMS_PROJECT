@@ -60,7 +60,7 @@ input, select, textarea {
     font-size: 14px;
 }
 
-/* Remove number input increase/decrease buttons (steppers) */
+/* Remove number input increase/decrease buttons */
 input[type="number"]::-webkit-outer-spin-button,
 input[type="number"]::-webkit-inner-spin-button {
     -webkit-appearance: none;
@@ -202,4 +202,23 @@ th {
 
 tr:nth-child(even) {
     background-color: #fafafa;
+}
+
+/* Simple alerts */
+.alert-success {
+    background: #dcfce7;
+    color: #166534;
+    padding: 10px 14px;
+    border-radius: 4px;
+    margin-bottom: 15px;
+    font-size: 14px;
+}
+
+.alert-error {
+    background: #fee2e2;
+    color: #991b1b;
+    padding: 10px 14px;
+    border-radius: 4px;
+    margin-bottom: 15px;
+    font-size: 14px;
 }
