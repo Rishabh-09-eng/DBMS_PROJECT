@@ -31,6 +31,11 @@ if (isset($_GET['delete'])) {
 
 $sql = "SELECT * FROM products
         WHERE user_id = ?
+        AND NOT EXISTS (
+            SELECT 1
+            FROM auction_results ar
+            WHERE ar.product_id = products.product_id
+        )
         ORDER BY product_id DESC";
 
 $stmt = mysqli_prepare($conn, $sql);
@@ -173,18 +178,18 @@ $result = mysqli_stmt_get_result($stmt);
                                 Delete
                             </a>
 
+                            |
+
+                            <a href="end_auction.php?id=<?php echo $row['product_id']; ?>"
+                                onclick="return confirm('Are you sure you want to end this auction?');">
+                                End Auction
+                            </a>
                         </td>
-
                     </tr>
-
                 <?php } ?>
-
             </table>
-
         <?php } ?>
-
     </div>
-
 </body>
 </html>
 

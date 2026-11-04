@@ -2,7 +2,6 @@
 session_start();
 include 'includes/db.php';
 
-// If user is not logged in, redirect to login page
 if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");
     exit();
@@ -10,12 +9,13 @@ if (!isset($_SESSION['user_id'])) {
 
 $loggedIn = true;
 
-// Fetch all active products with their highest bid and bid count
 $sql = "SELECT p.*, 
                COALESCE(MAX(b.bid_amount), p.price) AS current_price,
                COUNT(b.bid_id) AS total_bids
         FROM products p
         LEFT JOIN bids b ON p.product_id = b.product_id
+        LEFT JOIN auction_results ar ON p.product_id = ar.product_id
+        WHERE ar.result_id IS NULL
         GROUP BY p.product_id
         ORDER BY p.product_id DESC";
 
