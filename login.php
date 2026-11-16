@@ -2,66 +2,49 @@
 session_start();
 include 'includes/db.php';
 
-if (isset($_POST['login'])) {
+$error = "";
 
-    $email = $_POST['email'];
+if (isset($_POST['login'])) {
+    $email = trim($_POST['email']);
     $password = $_POST['password'];
 
     $sql = "SELECT * FROM users WHERE email = ?";
-
     $stmt = mysqli_prepare($conn, $sql);
-
     mysqli_stmt_bind_param($stmt, "s", $email);
-
     mysqli_stmt_execute($stmt);
-
     $result = mysqli_stmt_get_result($stmt);
 
-    if (mysqli_num_rows($result) == 1) {
-
-        $user = mysqli_fetch_assoc($result);
-
-        // Verify password
+    if ($user = mysqli_fetch_assoc($result)) {
         if (password_verify($password, $user['password'])) {
-
             $_SESSION['user_id'] = $user['user_id'];
             $_SESSION['user_name'] = $user['name'];
-
             header("Location: index.php");
             exit();
-
-        }
-        else {
+        } else {
             $error = "Incorrect password!";
         }
-
-    }
-    else {
+    } else {
         $error = "User does not exist!";
     }
-
     mysqli_stmt_close($stmt);
 }
 ?>
-
 <!DOCTYPE html>
 <html>
 <head>
     <title>Login - Online Auction</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
-<body class="auth-page">
+<body>
 
     <div class="container">
-
         <h2>Login</h2>
 
         <?php if (!empty($error)) { ?>
-            <p style="color: red; text-align: center;"><?php echo htmlspecialchars($error); ?></p>
+            <div class="alert-error"><?php echo htmlspecialchars($error); ?></div>
         <?php } ?>
 
         <form action="login.php" method="POST">
-
             <label>Email</label>
             <input type="email" name="email" required>
 
@@ -69,11 +52,9 @@ if (isset($_POST['login'])) {
             <input type="password" name="password" required>
 
             <button type="submit" name="login">Login</button>
-
         </form>
 
-        <p>Don't have an account? <a href="register.php">Register</a></p>
-
+        <p class="text-center">Don't have an account? <a href="register.php">Register</a></p>
     </div>
 
 </body>
