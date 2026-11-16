@@ -7,11 +7,14 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
+<<<<<<< HEAD
 $user_id = intval($_SESSION['user_id']);
 $error = "";
 $success = "";
 
 // Handle Add Product
+=======
+>>>>>>> aaefe974bee5e5f73741bfc28c8753b9f7444b0b
 if (isset($_POST['add_product'])) {
     $title = trim($_POST['title']);
     $category = trim($_POST['category']);
@@ -56,7 +59,10 @@ if (isset($_POST['add_product'])) {
     }
 }
 
+<<<<<<< HEAD
 // Handle Update Product
+=======
+>>>>>>> aaefe974bee5e5f73741bfc28c8753b9f7444b0b
 if (isset($_POST['update_product'])) {
     $product_id = intval($_POST['product_id']);
     $title = trim($_POST['title']);
@@ -95,7 +101,20 @@ if (isset($_POST['update_product'])) {
     }
 }
 
+<<<<<<< HEAD
 // Fetch product for editing if ?edit=
+=======
+if (isset($_GET['delete'])) {
+    $id = intval($_GET['delete']);
+
+    $sql = "DELETE FROM products WHERE product_id = $id";
+    mysqli_query($conn, $sql);
+
+    header("Location: products.php");
+    exit();
+}
+
+>>>>>>> aaefe974bee5e5f73741bfc28c8753b9f7444b0b
 $edit_product = null;
 $edit_auction = null;
 
