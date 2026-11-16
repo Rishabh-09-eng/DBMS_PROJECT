@@ -1,54 +1,37 @@
 <?php
 session_start();
+include 'includes/db.php';
 
 $loggedIn = isset($_SESSION['user_id']);
-$auctionLink = $loggedIn ? "auctions.php" : "login.php";
+$auctionLink = "auctions.php";
 ?>
-
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Online Auction System</title>
+    <title>BidZone - Online Auction System</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
-    <nav class="navbar">
-
-        <h2>BidZone</h2>
-
-        <div class="nav-links">
-            <a href="index.php">Home</a>
-            <a href="<?php echo $auctionLink; ?>">Browse Auctions</a>
-
-            <?php if ($loggedIn) { ?>
-                <a href="manage_products.php">Products</a>
-                <span>Welcome, <?php echo htmlspecialchars($_SESSION['user_name']); ?></span>
-                <a href="logout.php">Logout</a>
-
-            <?php } else { ?>
-
-                <a href="login.php">Login</a>
-                <a href="register.php">Register</a>
-
-            <?php } ?>
-
-        </div>
-
-    </nav>
+    <?php include 'includes/navbar.php'; ?>
 
     <section class="hero">
-
         <h1>Discover. Bid. Win.</h1>
-
         <p>
             Welcome to BidZone, your online auction platform.
             Discover products, compete with other bidders
             and win exciting deals.
         </p>
 
-        <a href="<?php echo $auctionLink; ?>" class="hero-btn">Explore Auctions</a>
+        <div>
+            <a href="auctions.php" class="btn">Explore Auctions</a>
 
+            <?php if ($loggedIn) { ?>
+                <a href="products.php" class="btn">List a Product  </a>
+            <?php } else { ?>
+                <a href="register.php" class="btn">Create Account</a>
+            <?php } ?>
+        </div>
     </section>
 
     <?php

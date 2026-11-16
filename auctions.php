@@ -2,22 +2,40 @@
 session_start();
 include 'includes/db.php';
 
-if (!isset($_SESSION['user_id'])) {
-    header("Location: login.php");
-    exit();
+$categoryFilter = isset($_GET['category']) ? trim($_GET['category']) : '';
+$searchFilter = isset($_GET['search']) ? trim($_GET['search']) : '';
+
+// Build query joining auctions, products, users, and bids
+$sql = "SELECT a.auction_id,
+               a.starting_price,
+               a.minimum_increment,
+               a.start_time,
+               a.end_time,
+               a.auction_status,
+               p.product_id,
+               p.title,
+               p.category,
+               p.description,
+               u.name AS seller_name,
+               COALESCE(MAX(b.bid_amount), a.starting_price) AS current_price,
+               COUNT(b.bid_id) AS total_bids
+        FROM auctions a
+        INNER JOIN products p ON a.product_id = p.product_id
+        LEFT JOIN users u ON p.user_id = u.user_id
+        LEFT JOIN bids b ON a.auction_id = b.auction_id
+        WHERE a.auction_status = 'active'";
+
+if (!empty($categoryFilter)) {
+    $catSafe = mysqli_real_escape_string($conn, $categoryFilter);
+    $sql .= " AND p.category = '$catSafe'";
 }
 
-$loggedIn = true;
+if (!empty($searchFilter)) {
+    $searchSafe = mysqli_real_escape_string($conn, $searchFilter);
+    $sql .= " AND (p.title LIKE '%$searchSafe%' OR p.description LIKE '%$searchSafe%')";
+}
 
-$sql = "SELECT p.*, 
-               COALESCE(MAX(b.bid_amount), p.price) AS current_price,
-               COUNT(b.bid_id) AS total_bids
-        FROM products p
-        LEFT JOIN bids b ON p.product_id = b.product_id
-        LEFT JOIN auction_results ar ON p.product_id = ar.product_id
-        WHERE ar.result_id IS NULL
-        GROUP BY p.product_id
-        ORDER BY p.product_id DESC";
+$sql .= " GROUP BY a.auction_id ORDER BY a.auction_id DESC";
 
 $result = mysqli_query($conn, $sql);
 ?>
@@ -29,24 +47,34 @@ $result = mysqli_query($conn, $sql);
 </head>
 <body>
 
-    <!-- Navigation Bar -->
-    <nav class="navbar">
-        <h2>BidZone</h2>
-        <div class="nav-links">
-            <a href="index.php">Home</a>
-            <a href="auctions.php">Auctions</a>
-            <a href="manage_products.php">Products</a>
-            <span>Welcome, <?php echo htmlspecialchars($_SESSION['user_name']); ?></span>
-            <a href="logout.php">Logout</a>
-        </div>
-    </nav>
+    <?php include 'includes/navbar.php'; ?>
 
     <div class="table-container">
 
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-            <h3 style="margin: 0;">Active Auctions</h3>
-            <a href="add_product.php" class="hero-btn">+ Add Product</a>
+        <div class="page-header">
+            <h3>Active Auctions</h3>
+            <?php if (isset($_SESSION['user_id'])) { ?>
+                <a href="products.php" class="btn">+ Add Product</a>
+            <?php } ?>
         </div>
+
+        <form method="GET" action="auctions.php" class="filter-bar">
+            <input type="text" name="search" placeholder="Search title or description..." value="<?php echo htmlspecialchars($searchFilter); ?>">
+            <select name="category">
+                <option value="">All Categories</option>
+                <?php
+                $cats = ['Electronics', 'Collectibles', 'Fashion', 'Jewelry & Watches', 'Art & Antiques', 'Vehicles', 'Home & Garden', 'Other'];
+                foreach ($cats as $cat) {
+                    $sel = ($categoryFilter === $cat) ? 'selected' : '';
+                    echo "<option value=\"$cat\" $sel>$cat</option>";
+                }
+                ?>
+            </select>
+            <button type="submit">Filter</button>
+            <?php if (!empty($searchFilter) || !empty($categoryFilter)) { ?>
+                <a href="auctions.php">Reset</a>
+            <?php } ?>
+        </form>
 
         <?php if ($result && mysqli_num_rows($result) > 0) { ?>
             <table>
@@ -54,30 +82,31 @@ $result = mysqli_query($conn, $sql);
                     <th>Title</th>
                     <th>Category</th>
                     <th>Description</th>
+                    <th>Seller</th>
                     <th>Starting Price</th>
-                    <th>Current Highest Bid</th>
+                    <th>Current Bid</th>
                     <th>Total Bids</th>
                     <th>Action</th>
                 </tr>
-
                 <?php while ($row = mysqli_fetch_assoc($result)) { ?>
                     <tr>
-                        <td><b><?php echo htmlspecialchars($row['title']); ?></b></td>
+                        <td>
+                            <b><a href="bid.php?auction_id=<?php echo $row['auction_id']; ?>"><?php echo htmlspecialchars($row['title']); ?></a></b>
+                        </td>
                         <td><?php echo htmlspecialchars($row['category']); ?></td>
                         <td><?php echo htmlspecialchars($row['description']); ?></td>
-                        <td>$<?php echo number_format($row['price'], 2); ?></td>
-                        <td>
-                            <b>$<?php echo number_format($row['current_price'], 2); ?></b>
-                        </td>
+                        <td><?php echo htmlspecialchars($row['seller_name'] ?? 'System'); ?></td>
+                        <td>$<?php echo number_format($row['starting_price'], 2); ?></td>
+                        <td><b>$<?php echo number_format($row['current_price'], 2); ?></b></td>
                         <td><?php echo $row['total_bids']; ?></td>
                         <td>
-                            <a href="bid.php?id=<?php echo $row['product_id']; ?>"><b>Bid Now</b></a>
+                            <a href="bid.php?auction_id=<?php echo $row['auction_id']; ?>"><b>Bid Now</b></a>
                         </td>
                     </tr>
                 <?php } ?>
             </table>
         <?php } else { ?>
-            <p style="color: #666; margin-top: 20px;">No active auctions found.</p>
+            <p class="muted text-center">No active auctions found.</p>
         <?php } ?>
 
     </div>
