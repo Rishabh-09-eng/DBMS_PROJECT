@@ -7,14 +7,11 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
-<<<<<<< HEAD
 $user_id = intval($_SESSION['user_id']);
 $error = "";
 $success = "";
 
 // Handle Add Product
-=======
->>>>>>> aaefe974bee5e5f73741bfc28c8753b9f7444b0b
 if (isset($_POST['add_product'])) {
     $title = trim($_POST['title']);
     $category = trim($_POST['category']);
@@ -59,10 +56,7 @@ if (isset($_POST['add_product'])) {
     }
 }
 
-<<<<<<< HEAD
 // Handle Update Product
-=======
->>>>>>> aaefe974bee5e5f73741bfc28c8753b9f7444b0b
 if (isset($_POST['update_product'])) {
     $product_id = intval($_POST['product_id']);
     $title = trim($_POST['title']);
@@ -101,20 +95,19 @@ if (isset($_POST['update_product'])) {
     }
 }
 
-<<<<<<< HEAD
-// Fetch product for editing if ?edit=
-=======
+// Handle Delete Product
 if (isset($_GET['delete'])) {
-    $id = intval($_GET['delete']);
+    $delete_id = intval($_GET['delete']);
+    $stmt = mysqli_prepare($conn, "DELETE FROM products WHERE product_id = ? AND user_id = ?");
+    mysqli_stmt_bind_param($stmt, "ii", $delete_id, $user_id);
+    mysqli_stmt_execute($stmt);
+    mysqli_stmt_close($stmt);
 
-    $sql = "DELETE FROM products WHERE product_id = $id";
-    mysqli_query($conn, $sql);
-
-    header("Location: products.php");
+    header("Location: manage_products.php");
     exit();
 }
 
->>>>>>> aaefe974bee5e5f73741bfc28c8753b9f7444b0b
+// Fetch product for editing if ?edit=
 $edit_product = null;
 $edit_auction = null;
 
